@@ -794,4 +794,22 @@ char mou[]="i am mrs Mou"                        //让计算机统计长度
 
 一般使用关键字cin ，而cin使用空白（**空格、制表符、换行符**）来确定字符串的结束位置，读取完成后自动在末尾添加空字符。
 
+`例如：              ruan          (大约就是一个单词)  `
+
+请看下面这一段程序，它有一个很有趣的点：
+
+```c++
+int main() {
+	string name;
+	string food;
+	cout << "请输入姓名：" << endl;
+	cin >> name;
+	cout << "请输入食物" << endl;
+	cin >> food;
+	cout << name << "在吃" << food << endl;
+}
+```
+
+![](D:\Work\workspace\gitWorkSpace\cppPrimerPlus\asset\程序截图0529.png)
+
 ###string 类简介
