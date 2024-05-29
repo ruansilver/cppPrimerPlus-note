@@ -810,6 +810,6 @@ int main() {
 }
 ```
 
-![](D:\Work\workspace\gitWorkSpace\cppPrimerPlus\asset\程序截图0529.png)
+![](.\asset\程序截图0529.png)
 
 ###string 类简介
