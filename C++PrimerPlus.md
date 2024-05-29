@@ -812,4 +812,24 @@ int main() {
 
 ![](.\asset\程序截图0529.png)
 
+我输入的是<code>ruan orange</code>  ，因为中间存在空格，所以cin只是将ruan读到，并且存储在**name**数组中，然后orange依然在输入队列中。然后当程序遇到第二个输入 <code> cin>>food </code>的时候，cin直接读到输入队列中还存放着有字符串orange ，所以无需输入，而是直接将读到的字符串orange 存储在**food**数组中。
+
+***
+
+#### 4.2.4  每次读取一行字符串输入
+
+就上面的输入方式（使用cin），我们无法读取超过一个单词的输入，为此，istream包含了一些面向行的类成员的函数：<code> getline() </code>和<code> get() </code>，这两个函数都是读到一行输入，直到遇到换行符。
+
+> 1. 面向行的输入： <code> getline() </code>
+
+cin.getline() 提供两个参数，（存储输入行的数组的名称  ,    要读取的字符数  ），例如：
+
+```c++
+cin.getline(name, 20);                  //将姓名存储到一个包含20个元素的name数组中。
+```
+
+> 2. 面向行的输入: <code> get() </code>
+
+
+
 ###string 类简介
