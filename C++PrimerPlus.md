@@ -818,7 +818,7 @@ int main() {
 
 #### 4.2.4  每次读取一行字符串输入
 
-就上面的输入方式（使用cin），我们无法读取超过一个单词的输入，为此，istream包含了一些面向行的类成员的函数：<code> getline() </code>和<code> get() </code>，这两个函数都是读到一行输入，直到遇到换行符。
+就上面的输入方式（使用cin），我们无法读取超过一个单词的输入，为此，istream包含了一些面向行的类成员的函数：<code> getline() </code>和<code> get() </code>，这两个函数都是读到一行输入，直到遇到==换行符==。
 
 > 1. 面向行的输入： <code> getline() </code>
 
@@ -828,8 +828,82 @@ cin.getline() 提供两个参数，（存储输入行的数组的名称  ,    �
 cin.getline(name, 20);                  //将姓名存储到一个包含20个元素的name数组中。
 ```
 
-> 2. 面向行的输入: <code> get() </code>
+> 2. 面向行一个字符一个字符的输入: <code> get() </code>
 
+cin.get()和cin.getline 接受一样的参数。
 
+但是二者的**区别**是：  getline()  在读到==换行符==之后，就会自动丢弃换行符。
+
+​                                而get（）在读到==换行符==之后，并不会丢弃==换行符==，而是保留在输入队列中，假如我们连续两次两次调用get()，例如：
+
+<code>cin.get(name,20);</code>
+
+<code>cin.get(age,20);</code>
+
+第二行就会一上来就读到第一行屁股后面的换行符，它判断为已经到达行尾，而没有发现任何可以读取的内容。**cin.get()需要借助帮助才能跨越换行符。**
+
+一般想用get来输入的话，是这样：                                     使用一个没有参数的get()来处理换行符
+
+```c++
+cin.get(name,20);                  //第一行正常输入
+cin.get();                         //第二行用来处理换行符，这一行都不会显示
+cin.get(age,20);                   //第三行就可以正常输入了
+```
+
+另一种写法是:
+
+```c++
+cin.get(name,20).get();           //这样等同于在第一行输入的语句后面添加了一个cin.get();
+```
+
+<font color="red">补充：</font>这里之所以可以这样做：是因为cin.get(Name,ArraySize)本身也会返回一个cin对象，这个cin对象看到屁股后面跟着一个 get()，又会自动调用后面的cin.get()。这个法则同样适用于cin.getline:
+
+```c++
+cin.getline(Name1,ArraySize).getline(Name2,ArraySize);       //这句话等同于连续输入两行getline并保存在Name1和Name2中。
+```
+
+<u>使用 get() 比 getline() 将会更加细致，但是也增加了麻烦。</u>
+
+***
+
+#### 4.2.5 小结
+
+- `cin >>` 会自动跳过输入中的空白字符，包括空格、制表符和换行符。
+- `cin.get()` 会读取并保留空白字符，包括换行符。
+- `cin.getline()` 会读取整行输入，并丢弃换行符。
+
+***
 
 ###string 类简介
+
+C++98标准在C++中添加了string类，要使用的话，需要包含头文件<code> <string> </code>
+
+相对于char数组来说，char数组只是存储一个字符串的存储单元，而string 类变量是一个表示字符串的实体。
+
+#### 4.3.1 C++字符串初始化
+
+C++中的string类也支持列表初始化:
+
+```c++
+string ruan = {" the name of someone"};        //相似于  char ruan[] = {" the name of someone"};
+string mou {" the name of a lady"};            //相似于  char mou[] {" the name of a lady"};
+```
+
+***
+
+#### 4.3.2 赋值、拼接和附加
+
+##### 1. 赋值
+
+数组不能将一个数组赋给另一个数组，但是可以将一个string 对象赋给另一个string对象。
+
+##### 2.拼接和附加
+
+string对香港允许使用+运算符将两个string对象拼接起来。
+
+string 对象允许使用+= 运算符将字符串追加到string字符串的末尾。
+
+***
+
+#### 4.3.3 string类的其它操作
+
