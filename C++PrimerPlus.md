@@ -3005,3 +3005,1051 @@ int main() {
 
 ###  5.5 循环和文本输入
 
+#### 5.5.4 文件尾标识符：EOF
+
+> EOF（End Of File）
+
+EOF（End Of File，文件结束）是一个标志，表示已经到达文件或输入流的末尾。在 C++ 中，EOF 常用来检测文件或流是否已经没有更多的数据可供读取。EOF 通常由常量 `EOF` 表示，定义在 `<cstdio>` 头文件中，其值通常是 `-1`。
+
+> 文件尾条件
+
+文件尾条件是指在读取文件或流时，检测到文件或流的末尾。这可以通过检查EOF标志来实现。文件尾条件的检测通常用于确保读取操作不会超过文件的末尾，避免读取无效数据。
+
+##### 检测 EOF 和 文件尾条件的方法
+
+在 C++ 中，可以使用 `istream` 对象的成员函数（如 `eof()`）或标准库函数（如 `feof()`）来检测 EOF 和文件尾条件，确保读取操作不会超过文件的末尾。
+
+######使用 `istream` 对象的成员函数
+
+1. **`eof()` 成员函数**：
+  
+   - `std::istream::eof()` 返回一个布尔值，指示是否到达输入流的末尾。
+   
+   ```cpp
+   #include <iostream>
+   #include <fstream>
+   
+   int main() {
+       std::ifstream file("example.txt");
+       if (!file) {
+           std::cerr << "Unable to open file.\n";
+           return 1;
+       }
+   
+       char ch;
+       while (file.get(ch)) {
+           std::cout << ch;
+       }
+   
+       if (file.eof()) {
+           std::cout << "\nReached end of file.\n";
+       } else {
+           std::cerr << "\nAn error occurred while reading the file.\n";
+       }
+   
+       file.close();
+       return 0;
+   }
+   ```
+   
+   在这个示例中，`file.get(ch)` 在读取到文件末尾时返回 `false`，并且 `file.eof()` 返回 `true`，表示已到达文件末尾。
+   
+2. **`std::istream::operator bool` 和 `std::istream::good` 成员函数**：
+   - 也可以使用输入流对象的布尔转换或 `good()` 成员函数来检测流是否仍然有效。
+
+   ```cpp
+   #include <iostream>
+   #include <fstream>
+   
+   int main() {
+       std::ifstream file("example.txt");
+       if (!file) {
+           std::cerr << "Unable to open file.\n";
+           return 1;
+       }
+   
+       std::string line;
+       while (std::getline(file, line)) {
+           std::cout << line << std::endl;
+       }
+   
+       if (file.eof()) {
+           std::cout << "\nReached end of file.\n";
+       } else {
+           std::cerr << "\nAn error occurred while reading the file.\n";
+       }
+   
+       file.close();
+       return 0;
+   }
+   ```
+
+   在这个示例中，`std::getline(file, line)` 在读取到文件末尾时返回 `false`，并且 `file.eof()` 返回 `true`，表示已到达文件末尾。
+
+######使用标准库函数
+
+1. **`getc()` 和 `feof()`**：
+  
+   - `getc()` 用于从文件中读取一个字符，`feof()` 用于检测文件流是否到达文件末尾。
+   
+   ```cpp
+   #include <cstdio>
+   #include <iostream>
+   
+   int main() {
+       FILE* file = fopen("example.txt", "r");
+       if (!file) {
+           std::cerr << "Unable to open file.\n";
+           return 1;
+       }
+   
+       int ch;
+       while ((ch = getc(file)) != EOF) {
+           putchar(ch);
+       }
+   
+       if (feof(file)) {
+           std::cout << "\nReached end of file.\n";
+       } else {
+           std::cerr << "\nAn error occurred while reading the file.\n";
+       }
+   
+       fclose(file);
+       return 0;
+   }
+   ```
+   
+   在这个示例中，`getc(file)` 在读取到文件末尾时返回 `EOF`，并且 `feof(file)` 返回 `true`，表示已到达文件末尾。
+   
+   ***
+   
+   ### 5.6  嵌套循环和二维数组
+   
+   嵌套循环是指在一个循环内部包含另一个循环的结构，这种循环结构常用于处理复杂的迭代问题或者遍历多维数据结构，比如二维数组。在 C++ 中，嵌套循环的语法非常简单，通常使用 `for`、`while` 或 `do-while` 循环来实现。
+   
+   下面是一个示例展示了如何使用嵌套循环来遍历一个二维数组：
+   
+   ```cpp
+   #include <iostream>
+   
+   int main() {
+       const int ROWS = 3;
+       const int COLS = 4;
+       int matrix[ROWS][COLS] = {
+           {1, 2, 3, 4},
+           {5, 6, 7, 8},
+           {9, 10, 11, 12}
+       };
+   
+       // 使用嵌套循环遍历二维数组
+       for (int i = 0; i < ROWS; ++i) {
+           for (int j = 0; j < COLS; ++j) {
+               std::cout << matrix[i][j] << " ";
+           }
+           std::cout << std::endl;
+       }
+   
+       return 0;
+   }
+   ```
+   
+   在这个示例中，我们定义了一个大小为 3x4 的二维数组 `matrix`，然后使用嵌套的 `for` 循环来遍历数组中的每个元素。外层循环控制行数，内层循环控制列数，这样就可以依次访问数组中的每个元素。
+   
+   二维数组是一种常见的数据结构，它可以用于表示矩阵、游戏地图等多维数据。嵌套循环则是一种非常有用的循环结构，可以方便地处理多层迭代问题。
+
+***
+
+***
+
+## 第六章：分支语句和逻辑运算符
+
+### 6.1 if语句
+
+#### 6.1.1 if else 语句
+
+`if-else` 语句是 C++ 中用于根据条件执行不同代码块的控制语句。它的语法结构如下：
+
+```cpp
+if (condition) {
+    // 当条件为真时执行这里的代码块
+} else {
+    // 当条件为假时执行这里的代码块
+}
+```
+
+- `if` 后面跟着一个条件表达式，用于判断是否执行后面的代码块。如果条件表达式的值为真（非零），则执行 `if` 后面的代码块，否则跳过。
+- `else` 是可选的，如果 `if` 后面的条件表达式的值为假，则执行 `else` 后面的代码块。
+- 可以在 `else` 后面再跟一个 `if`，形成嵌套的 `if-else` 结构，用于处理多个条件。
+
+下面是一个示例：
+
+```cpp
+#include <iostream>
+
+int main() {
+    int num = 10;
+
+    if (num > 0) {
+        std::cout << "Number is positive" << std::endl;
+    } else if (num < 0) {
+        std::cout << "Number is negative" << std::endl;
+    } else {
+        std::cout << "Number is zero" << std::endl;
+    }
+
+    return 0;
+}
+```
+
+在这个示例中，根据 `num` 的值不同，执行不同的输出操作。如果 `num` 大于 0，则输出 "Number is positive"；如果 `num` 小于 0，则输出 "Number is negative"；如果 `num` 等于 0，则输出 "Number is zero"。
+
+
+
+***
+
+#### 6.1.2 格式化if else 语句
+
+格式化的 `if-else` 语句指的是通过缩进和换行来增强代码的可读性和结构清晰度的写法。虽然在 C++ 中，大多数 `if-else` 语句在语法上允许在单行上编写，但将其格式化为多行的形式通常更易于阅读和维护。
+
+下面是一个示例，展示了格式化的 `if-else` 语句：
+
+```cpp
+#include <iostream>
+
+int main() {
+    int num = 10;
+
+    if (num > 0) {
+        std::cout << "Number is positive" << std::endl;
+    } 
+    else if (num < 0) {
+        std::cout << "Number is negative" << std::endl;
+    } 
+    else {
+        std::cout << "Number is zero" << std::endl;
+    }
+
+    return 0;
+}
+```
+
+在这个示例中，`if`、`else if` 和 `else` 语句块都被缩进了一定的空格，以使其更易于阅读。这样的格式化使得每个条件分支都更清晰地呈现出来，有助于读者理解代码的逻辑。
+
+虽然对于简单的 `if-else` 结构，单行编写也可以，但对于较长、更复杂的条件语句，格式化成多行的方式通常更为合适。
+
+
+
+
+
+
+
+***
+
+### 6.2 逻辑表达式
+
+当谈到逻辑表达式时，通常指的是由逻辑运算符组合而成的表达式，用于描述逻辑关系和条件判断。在 C++ 中，常用的逻辑运算符有三种：逻辑与（AND）、逻辑或（OR）和逻辑非（NOT）。下面分别介绍这三种逻辑表达式及其用法：
+
+1. **逻辑与（AND）：`&&`**
+   - 逻辑与操作符用于检查两个条件是否同时为真。当且仅当两个条件都为真时，整个表达式的结果才为真；否则，结果为假。
+   - 语法：`condition1 && condition2`
+   - 示例：
+
+   ```cpp
+   int x = 5;
+   int y = 10;
+   
+   if (x > 0 && y > 0) {
+       // 如果 x 和 y 都大于 0，则执行该代码块
+   }
+   ```
+
+2. **逻辑或（OR）：`||`**
+   - 逻辑或操作符用于检查两个条件中至少一个是否为真。如果两个条件中有一个为真，则整个表达式的结果为真；只有当两个条件都为假时，整个表达式的结果才为假。
+   - 语法：`condition1 || condition2`
+   - 示例：
+
+   ```cpp
+   int x = 5;
+   int y = 10;
+   
+   if (x == 0 || y == 0) {
+       // 如果 x 或者 y 中有一个等于 0，则执行该代码块
+   }
+   ```
+
+3. **逻辑非（NOT）：`!`**
+   - 逻辑非操作符用于对条件的结果进行取反。如果条件为真，则取反后结果为假；如果条件为假，则取反后结果为真。
+   - 语法：`!condition`
+   - 示例：
+
+   ```cpp
+   bool flag = true;
+   
+   if (!flag) {
+       // 如果 flag 为假，则执行该代码块
+   }
+   ```
+
+逻辑表达式常用于控制程序的流程，例如在 `if` 语句、循环条件、布尔变量的赋值等地方。熟练掌握逻辑表达式的使用，可以编写出更具有逻辑严谨性和可读性的代码。
+
+
+
+
+
+
+
+
+
+***
+
+
+
+
+
+
+
+
+
+### 6.3 字符函数库CCtype
+
+Cctype 是 C/C++ 标准库中的一个函数库，提供了一些用于测试和操作字符的函数。这些函数通常用于检查字符的属性，比如判断字符是否是字母、数字、空格等，并且可以将字符转换为大写或小写形式。
+
+以下是一些常用的 Cctype 函数及其功能：
+
+1. **`isalpha(int c)`**
+   - 检查字符是否是一个字母（a-z 或 A-Z）。
+   - 如果是字母，则返回非零值；否则返回 0。
+
+2. **`isdigit(int c)`**
+   - 检查字符是否是一个数字（0-9）。
+   - 如果是数字，则返回非零值；否则返回 0。
+
+3. **`isalnum(int c)`**
+   - 检查字符是否是一个字母或数字。
+   - 如果是字母或数字，则返回非零值；否则返回 0。
+
+4. **`isspace(int c)`**
+   - 检查字符是否是一个空白字符（空格、制表符、换行符等）。
+   - 如果是空白字符，则返回非零值；否则返回 0。
+
+5. **`islower(int c)`**
+   - 检查字符是否是一个小写字母（a-z）。
+   - 如果是小写字母，则返回非零值；否则返回 0。
+
+6. **`isupper(int c)`**
+   - 检查字符是否是一个大写字母（A-Z）。
+   - 如果是大写字母，则返回非零值；否则返回 0。
+
+7. **`tolower(int c)`**
+   - 将大写字母转换为小写字母。
+   - 如果参数是大写字母，则返回对应的小写字母；否则返回参数本身。
+
+8. **`toupper(int c)`**
+   - 将小写字母转换为大写字母。
+   - 如果参数是小写字母，则返回对应的大写字母；否则返回参数本身。
+
+这些函数通常用于处理输入的字符，进行字符的分类、大小写转换等操作。在使用时需要包含头文件 `<cctype>`（C）或 `<cctype>`（C++）。
+
+***
+
+### 6.4  ?:运算符
+
+`?:` 运算符，也称为条件运算符或三元运算符，是 C++ 中唯一的三元运算符。它允许在一个表达式中根据条件选择不同的值。它的基本语法如下：
+
+```cpp
+condition ? expression1 : expression2
+```
+
+- `condition` 是一个布尔表达式，如果为真（非零），则整个表达式的结果是 `expression1` 的值；否则，结果是 `expression2` 的值。
+- `expression1` 和 `expression2` 可以是任何类型的表达式，但它们的类型必须兼容，且结果类型会被隐式转换为最终的类型。
+
+`?:` 运算符的执行顺序是从左到右的。首先计算 `condition`，如果为真，则计算并返回 `expression1` 的值；否则，计算并返回 `expression2` 的值。
+
+以下是一个示例：
+
+```cpp
+int x = 10;
+int y = 20;
+int max = (x > y) ? x : y;
+```
+
+在这个示例中，如果 `x` 大于 `y`，则 `max` 将被赋值为 `x` 的值（即 `10`）；否则，`max` 将被赋值为 `y` 的值（即 `20`）。
+
+***
+
+
+
+### 6.5 switch 语句
+
+`switch` 语句是 C++ 中用于根据表达式的值选择不同执行路径的控制语句。它可以替代一系列的 `if-else if-else` 结构，使代码更加简洁和易于理解。`switch` 语句的基本语法如下：
+
+```cpp
+switch (expression) {
+    case constant1:
+        // 当 expression 的值等于 constant1 时执行这里的代码
+        break;
+    case constant2:
+        // 当 expression 的值等于 constant2 时执行这里的代码
+        break;
+    // 可以有多个 case 分支
+    default:
+        // 当 expression 的值与所有 case 的常量都不匹配时执行这里的代码
+        break;
+}
+```
+
+- `switch` 后面跟着一个表达式，该表达式的值将被用来匹配 `case` 分支。
+- 每个 `case` 后面跟着一个常量（可以是整数、字符或枚举值），表示要与表达式的值进行比较。
+- 当表达式的值等于某个 `case` 后面的常量时，将执行对应 `case` 后面的代码块，并且执行完该代码块后会自动跳出 `switch` 语句，除非遇到 `break` 关键字。
+- 如果没有任何一个 `case` 分支匹配成功，则执行 `default` 后面的代码块（可选）。
+- `break` 关键字用于结束 `case` 分支的执行，如果省略 `break`，则会继续执行后面的 `case` 或 `default` 分支。
+
+以下是一个示例：
+
+```cpp
+#include <iostream>
+
+int main() {
+    int choice = 2;
+
+    switch (choice) {
+        case 1:
+            std::cout << "You chose option 1" << std::endl;
+            break;
+        case 2:
+            std::cout << "You chose option 2" << std::endl;
+            break;
+        case 3:
+            std::cout << "You chose option 3" << std::endl;
+            break;
+        default:
+            std::cout << "Invalid choice" << std::endl;
+            break;
+    }
+
+    return 0;
+}
+```
+
+在这个示例中，根据 `choice` 的值，选择不同的执行路径。因为 `choice` 的值是 `2`，所以输出 "You chose option 2"。
+
+***
+
+### 6.6 break和continue语句
+
+`break` 和 `continue` 是 C++ 中用于控制循环行为的关键字。
+
+1. **`break` 语句：**
+   - `break` 语句用于在循环内部中止循环的执行，并跳出循环体。
+   - 当 `break` 语句被执行时，程序将立即退出当前的循环，执行将继续执行循环后面的代码。
+   - `break` 通常用于循环中的某个条件满足时立即停止循环，而不是等到循环条件不再满足。
+   - `break` 只能用于 `switch`、`while`、`do-while` 和 `for` 循环。
+
+   示例：
+   ```cpp
+   for (int i = 0; i < 10; ++i) {
+       if (i == 5) {
+           break; // 当 i 等于 5 时退出循环
+       }
+       std::cout << i << std::endl;
+   }
+   ```
+
+2. **`continue` 语句：**
+   - `continue` 语句用于跳过循环体内的剩余代码，并在下一次循环迭代时立即执行下一次循环的条件判断。
+   - 当 `continue` 语句被执行时，程序将立即跳到循环的开始处，继续下一次循环迭代。
+   - `continue` 可以让循环提前进入下一轮迭代，而不是执行剩余的循环体代码。
+   - `continue` 只能用于 `while`、`do-while` 和 `for` 循环。
+
+   示例：
+   ```cpp
+   for (int i = 0; i < 10; ++i) {
+       if (i % 2 == 0) {
+           continue; // 如果 i 是偶数，跳过当前循环迭代
+       }
+       std::cout << i << std::endl;
+   }
+   ```
+
+这两个关键字在循环中的使用可以提高代码的灵活性和执行效率。`break` 可以提前结束循环，而 `continue` 可以在满足某些条件时跳过当前迭代，进入下一轮循环。
+
+***
+
+### 6.7 简单文件输入/输出 
+
+文件的输入和输出是指在程序中进行文件的读取和写入操作。C++ 提供了一组用于文件操作的标准库，其中主要包括 `<fstream>` 头文件中定义的类和函数。
+
+1. **文件的输出（写入）：**
+  
+   - 若要将数据写入文件，首先需要创建一个输出文件流对象，通常使用 `ofstream` 类。
+   - 打开文件并将数据写入文件后，需要关闭文件以释放资源。
+   
+   示例：
+   ```cpp
+   #include <iostream>
+   #include <fstream>
+   
+   int main() {
+       std::ofstream outFile("output.txt"); // 创建输出文件流对象，并打开名为 "output.txt" 的文件
+       if (outFile.is_open()) { // 检查文件是否成功打开
+           outFile << "Hello, world!" << std::endl; // 将字符串写入文件
+           outFile.close(); // 关闭文件
+           std::cout << "Data written to file." << std::endl;
+       } else {
+           std::cerr << "Error opening file." << std::endl;
+       }
+       return 0;
+   }
+   ```
+   
+2. **文件的输入（读取）：**
+   - 若要从文件中读取数据，首先需要创建一个输入文件流对象，通常使用 `ifstream` 类。
+   - 打开文件并从文件读取数据后，需要关闭文件以释放资源。
+
+   示例：
+   ```cpp
+   #include <iostream>
+   #include <fstream>
+   #include <string>
+   
+   int main() {
+       std::ifstream inFile("input.txt"); // 创建输入文件流对象，并打开名为 "input.txt" 的文件
+       if (inFile.is_open()) { // 检查文件是否成功打开
+           std::string line;
+           while (std::getline(inFile, line)) { // 逐行读取文件中的数据
+               std::cout << line << std::endl; // 输出读取的数据
+           }
+           inFile.close(); // 关闭文件
+       } else {
+           std::cerr << "Error opening file." << std::endl;
+       }
+       return 0;
+   }
+   ```
+
+在进行文件操作时，要确保文件的打开和关闭操作，以防止资源泄露或数据丢失。此外，建议对文件的打开操作进行检查，以处理可能的文件打开失败情况。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***
+
+***
+
+## 第十七章  输入、输出和文件
+
+### 17.1 C++输入和输出概述
+
+#### 17.1.1 流和缓冲区
+
+
+
+#### 17.1.2  流、缓冲区和iostream文件
+
+
+
+#### 17.1.3 重定向
+
+
+
+
+
+### 17.2 使用cout进行输出
+
+#### 17.2.1 重载的<<运算符
+
+
+
+#### 17.2.2 其他ostream方法
+
+
+
+
+
+#### 17.2.3 刷新输出缓冲区
+
+
+
+#### 17.2.4 使用cout进行格式化
+
+
+
+
+
+### 17.3 使用cin进行输入
+
+#### 17.3.1 cin如何检查输入
+
+
+
+#### 17.3.2 流状态
+
+
+
+#### 17.3.3 其他istream方法
+
+
+
+
+
+### 17.4  文件输入和输出
+
+#### 17.4.1 简单的文件 I/0
+
+
+
+#### 17.4.2 流状态检查和is_open()
+
+
+
+#### 17.4.3 打开多个文件
+
+
+
+#### 17.4.4 命令行处理技术
+
+
+
+#### 17.4.5 文件模式
+
+
+
+
+
+### 17.5 内核格式化
+
+
+
+#### 5.5.5 cin的成员函数们
+
+##### 1. **`cin.get()`**
+
+- 用于从输入流中读取一个字符或读取字符数组。
+- 有多种重载形式：
+  - `int get()`：读取一个字符并返回其 ASCII 值。
+  - `istream& get(char& ch)`：读取一个字符并存储在 `ch` 中。
+  - `istream& get(char* s, streamsize n)`：读取字符数组，最多读取 `n-1` 个字符，遇到换行符停止读取。
+  - `istream& get(char* s, streamsize n, char delim)`：读取字符数组，最多读取 `n-1` 个字符，遇到指定的分隔符 `delim` 停止读取。
+
+```cpp
+#include <iostream>
+
+int main() {
+    char ch;
+    std::cin.get(ch);  // 读取一个字符
+    std::cout << "Character read: " << ch << std::endl;
+
+    char buffer[100];
+    std::cin.get(buffer, 100);  // 读取字符数组
+    std::cout << "String read: " << buffer << std::endl;
+
+    int asciiValue = std::cin.get();  // 读取一个字符并返回其 ASCII 值
+    if (asciiValue != EOF) {
+        std::cout << "Next character ASCII value: " << asciiValue << std::endl;
+    } else {
+        std::cout << "End of input stream." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 2. **`cin.getline()`**
+
+- 用于从输入流中读取一行字符，直到换行符或指定的最大字符数。
+- 形式为：`istream& getline(char* s, streamsize n)`，其中 `s` 为字符数组，`n` 为最大读取字符数。
+
+```cpp
+#include <iostream>
+
+int main() {
+    char buffer[100];
+    std::cin.getline(buffer, 100);  // 读取一行字符
+    std::cout << "Line read: " << buffer << std::endl;
+
+    return 0;
+}
+```
+
+### 3. **`cin.ignore()`**
+
+- 忽略输入流中的字符。
+- 有多种重载形式：
+  - `istream& ignore(streamsize n = 1, int delim = EOF)`：忽略 `n` 个字符或直到遇到分隔符 `delim`。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cin.ignore(5, '\n');  // 忽略前 5 个字符或直到遇到换行符
+    std::string str;
+    std::getline(std::cin, str);
+    std::cout << "Remaining input: " << str << std::endl;
+
+    return 0;
+}
+```
+
+### 4. **`cin.peek()`**
+
+- 返回下一个字符，但不从输入流中提取它。
+
+```cpp
+#include <iostream>
+
+int main() {
+    char ch = std::cin.peek();  // 查看下一个字符
+    std::cout << "Next character is: " << ch << std::endl;
+
+    return 0;
+}
+```
+
+### 5. **`cin.putback(char ch)`**
+
+- 将字符放回输入流中，使其成为下一个读取的字符。
+
+```cpp
+#include <iostream>
+
+int main() {
+    char ch;
+    std::cin >> ch;
+    std::cin.putback(ch);  // 将字符放回输入流
+    ch = std::cin.get();  // 再次读取同一个字符
+    std::cout << "Character read again: " << ch << std::endl;
+
+    return 0;
+}
+```
+
+### 6. **`cin.unget()`**
+
+- 将上一个读取的字符放回输入流。
+
+```cpp
+#include <iostream>
+
+int main() {
+    char ch;
+    std::cin >> ch;
+    std::cin.unget();  // 将上一个字符放回输入流
+    ch = std::cin.get();  // 再次读取同一个字符
+    std::cout << "Character read again: " << ch << std::endl;
+
+    return 0;
+}
+```
+
+### 7. **`cin.clear()`**
+
+- 清除流的错误状态标志，使输入流恢复为可用状态。
+
+```cpp
+#include <iostream>
+
+int main() {
+    int x;
+    std::cin >> x;
+
+    if (std::cin.fail()) {
+        std::cout << "Invalid input, clearing error state.\n";
+        std::cin.clear();  // 清除错误状态
+        std::cin.ignore(100, '\n');  // 忽略无效输入
+    } else {
+        std::cout << "You entered: " << x << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 8. **`cin.eof()`**
+
+- 检查是否到达输入流的末尾。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Enter some text (Ctrl+D to end input): ";
+    while (!std::cin.eof()) {
+        char ch;
+        std::cin.get(ch);
+        if (!std::cin.eof()) {
+            std::cout << ch;
+        }
+    }
+    std::cout << "\nEnd of input reached." << std::endl;
+
+    return 0;
+}
+```
+
+### 9. **`cin.fail()`**
+
+- 检查输入流是否处于错误状态。
+
+```cpp
+#include <iostream>
+
+int main() {
+    int x;
+    std::cin >> x;
+
+    if (std::cin.fail()) {
+        std::cout << "Input failed." << std::endl;
+    } else {
+        std::cout << "You entered: " << x << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 10. **`cin.bad()`**
+
+- 检查输入流是否处于不可恢复的错误状态。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cin.setstate(std::ios::badbit);
+    if (std::cin.bad()) {
+        std::cout << "Stream is in bad state." << std::endl;
+    }
+    return 0;
+}
+```
+
+### 11. **`cin.good()`**
+
+- 检查输入流是否处于正常状态。
+
+```cpp
+#include <iostream>
+
+int main() {
+    if (std::cin.good()) {
+        std::cout << "Stream is good." << std::endl;
+    } else {
+        std::cout << "Stream is not good." << std::
+```
+
+```cpp
+std::cout << "Stream is not good." << std::endl;
+    }
+    return 0;
+}
+```
+
+### 12. **`cin.gcount()`**
+
+- 返回最后一次未格式化输入操作中提取的字符数。
+
+```cpp
+#include <iostream>
+
+int main() {
+    char buffer[10];
+    std::cin.read(buffer, 5);
+    std::cout << "Number of characters read: " << std::cin.gcount() << std::endl;
+
+    return 0;
+}
+```
+
+抱歉，我漏写了。接下来是继续介绍 `cin.good()` 的代码示例：
+
+```cpp
+#include <iostream>
+
+int main() {
+    if (std::cin.good()) {
+        std::cout << "Stream is good." << std::endl;
+    } else {
+        std::cout << "Stream is not good." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 13. **`cin.tie()`**
+
+- 返回当前关联的输出流指针。
+- 如果没有关联的输出流，则返回空指针。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::ostream* tiedStream = std::cin.tie();
+    if (tiedStream != nullptr) {
+        std::cout << "Tied output stream address: " << tiedStream << std::endl;
+    } else {
+        std::cout << "No tied output stream." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 14. **`cin.tie(ostream* os)`**
+
+- 将输出流 `os` 关联到输入流，返回之前关联的输出流指针。
+- 如果 `os` 为空指针，则解除当前的关联。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::ostream* previousTiedStream = std::cin.tie(nullptr);
+    if (previousTiedStream != nullptr) {
+        std::cout << "Previous tied output stream address: " << previousTiedStream << std::endl;
+    } else {
+        std::cout << "No previous tied output stream." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 15. **`cin.rdbuf()`**
+
+- 返回输入流的底层缓冲区。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::streambuf* buffer = std::cin.rdbuf();
+    if (buffer != nullptr) {
+        std::cout << "Input stream buffer address: " << buffer << std::endl;
+    } else {
+        std::cout << "No input stream buffer." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+抱歉，我还没有完成。接着是 `cin.rdbuf()` 的代码示例：
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::streambuf* buffer = std::cin.rdbuf();
+    if (buffer != nullptr) {
+        std::cout << "Input stream buffer address: " << buffer << std::endl;
+    } else {
+        std::cout << "No input stream buffer." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 16. **`cin.rdbuf(streambuf* sb)`**
+
+- 将输入流的底层缓冲区设置为 `sb`，返回之前的底层缓冲区。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::streambuf* previousBuffer = std::cin.rdbuf(nullptr);
+    if (previousBuffer != nullptr) {
+        std::cout << "Previous input stream buffer address: " << previousBuffer << std::endl;
+    } else {
+        std::cout << "No previous input stream buffer." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 17. **`cin.sync_with_stdio()`**
+
+- 同步 `cin` 与 C 标准输入流。
+- 如果成功，返回非零值；否则返回零。
+
+```cpp
+#include <iostream>
+
+int main() {
+    int result = std::cin.sync_with_stdio();
+    if (result != 0) {
+        std::cout << "Synchronization with stdio enabled." << std::endl;
+    } else {
+        std::cout << "Failed to synchronize with stdio." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+### 18. **`cin.tie(nullptr)`**
+
+- 解除输入流和输出流之间的关联，返回之前关联的输出流指针。
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::ostream* previousTiedStream = std::cin.tie(nullptr);
+    if (previousTiedStream != nullptr) {
+        std::cout << "Previous tied output stream address: " << previousTiedStream << std::endl;
+    } else {
+        std::cout << "No previous tied output stream." << std::endl;
+    }
+
+    return 0;
+}
+```
+
