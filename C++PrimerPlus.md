@@ -3005,7 +3005,7 @@ int main() {
 
 ###  5.5 循环和文本输入
 
-#### 5.5.4 文件尾标识符：EOF
+#### 5.5.4 文件尾条件
 
 > EOF（End Of File）
 
@@ -3013,7 +3013,13 @@ EOF（End Of File，文件结束）是一个标志，表示已经到达文件或
 
 > 文件尾条件
 
-文件尾条件是指在读取文件或流时，检测到文件或流的末尾。这可以通过检查EOF标志来实现。文件尾条件的检测通常用于确保读取操作不会超过文件的末尾，避免读取无效数据。
+文件尾条件是指在读取文件或流时，检测到文件或流的末尾。这可以==通过检查EOF标志来实现==。文件尾条件的检测通常用于确保读取操作不会超过文件的末尾，避免读取无效数据。
+
+##### 文件尾
+
+
+
+
 
 ##### 检测 EOF 和 文件尾条件的方法
 
@@ -3052,11 +3058,12 @@ EOF（End Of File，文件结束）是一个标志，表示已经到达文件或
    }
    ```
    
-   在这个示例中，`file.get(ch)` 在读取到文件末尾时返回 `false`，并且 `file.eof()` 返回 `true`，表示已到达文件末尾。
+   `file.get(ch)` 在读取到文件末尾时返回 `false`，并且 `file.eof()` 返回 `true`，表示已到达文件末尾。
    
 2. **`std::istream::operator bool` 和 `std::istream::good` 成员函数**：
+  
    - 也可以使用输入流对象的布尔转换或 `good()` 成员函数来检测流是否仍然有效。
-
+   
    ```cpp
    #include <iostream>
    #include <fstream>
@@ -3083,7 +3090,7 @@ EOF（End Of File，文件结束）是一个标志，表示已经到达文件或
        return 0;
    }
    ```
-
+   
    在这个示例中，`std::getline(file, line)` 在读取到文件末尾时返回 `false`，并且 `file.eof()` 返回 `true`，表示已到达文件末尾。
 
 ######使用标准库函数
@@ -3122,40 +3129,74 @@ EOF（End Of File，文件结束）是一个标志，表示已经到达文件或
    在这个示例中，`getc(file)` 在读取到文件末尾时返回 `EOF`，并且 `feof(file)` 返回 `true`，表示已到达文件末尾。
    
    ***
-   
-   ### 5.6  嵌套循环和二维数组
-   
-   嵌套循环是指在一个循环内部包含另一个循环的结构，这种循环结构常用于处理复杂的迭代问题或者遍历多维数据结构，比如二维数组。在 C++ 中，嵌套循环的语法非常简单，通常使用 `for`、`while` 或 `do-while` 循环来实现。
-   
-   下面是一个示例展示了如何使用嵌套循环来遍历一个二维数组：
-   
+
+####5.5.5 另一个cin.get()版本
+
+1. ##### 1. **`cin.get()`**
+
+   - 用于从输入流中读取一个字符或读取字符数组。
+   - 有多种重载形式：
+     - `int get()`：读取一个字符并返回其 ASCII 值。
+     - `istream& get(char& ch)`：读取一个字符并存储在 `ch` 中。
+     - `istream& get(char* s, streamsize n)`：读取字符数组，最多读取 `n-1` 个字符，遇到换行符停止读取。
+     - `istream& get(char* s, streamsize n, char delim)`：读取字符数组，最多读取 `n-1` 个字符，遇到指定的分隔符 `delim` 停止读取。
+
    ```cpp
    #include <iostream>
    
    int main() {
-       const int ROWS = 3;
-       const int COLS = 4;
-       int matrix[ROWS][COLS] = {
-           {1, 2, 3, 4},
-           {5, 6, 7, 8},
-           {9, 10, 11, 12}
-       };
+       char ch;
+       std::cin.get(ch);  // 读取一个字符
+       std::cout << "Character read: " << ch << std::endl;
    
-       // 使用嵌套循环遍历二维数组
-       for (int i = 0; i < ROWS; ++i) {
-           for (int j = 0; j < COLS; ++j) {
-               std::cout << matrix[i][j] << " ";
-           }
-           std::cout << std::endl;
+       char buffer[100];
+       std::cin.get(buffer, 100);  // 读取字符数组
+       std::cout << "String read: " << buffer << std::endl;
+   
+       int asciiValue = std::cin.get();  // 读取一个字符并返回其 ASCII 值
+       if (asciiValue != EOF) {
+           std::cout << "Next character ASCII value: " << asciiValue << std::endl;
+       } else {
+           std::cout << "End of input stream." << std::endl;
        }
    
        return 0;
    }
    ```
-   
-   在这个示例中，我们定义了一个大小为 3x4 的二维数组 `matrix`，然后使用嵌套的 `for` 循环来遍历数组中的每个元素。外层循环控制行数，内层循环控制列数，这样就可以依次访问数组中的每个元素。
-   
-   二维数组是一种常见的数据结构，它可以用于表示矩阵、游戏地图等多维数据。嵌套循环则是一种非常有用的循环结构，可以方便地处理多层迭代问题。
+
+   ***
+
+### 5.6 嵌套循环和二维数组
+
+嵌套循环是指在一个循环内部包含另一个循环的结构，这种循环结构常用于处理复杂的迭代问题或者遍历多维数据结构，比如二维数组。在 C++ 中，嵌套循环的语法非常简单，通常使用 `for`、`while` 或 `do-while` 循环来实现。
+
+下面是一个示例展示了如何使用嵌套循环来遍历一个二维数组：
+
+```cpp
+#include <iostream>
+
+int main() {
+    const int ROWS = 3;
+    const int COLS = 4;
+    int matrix[ROWS][COLS] = {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 10, 11, 12}
+    };
+    // 使用嵌套循环遍历二维数组
+    for (int i = 0; i < ROWS; ++i) {
+        for (int j = 0; j < COLS; ++j) {
+            std::cout << matrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    return 0;
+}
+```
+
+在这个示例中，我们定义了一个大小为 3x4 的二维数组 `matrix`，然后使用嵌套的 `for` 循环来遍历数组中的每个元素。外层循环控制行数，内层循环控制列数，这样就可以依次访问数组中的每个元素。
+
+二维数组是一种常见的数据结构，它可以用于表示矩阵、游戏地图等多维数据。嵌套循环则是一种非常有用的循环结构，可以方便地处理多层迭代问题。
 
 ***
 
@@ -3181,44 +3222,17 @@ if (condition) {
 - `else` 是可选的，如果 `if` 后面的条件表达式的值为假，则执行 `else` 后面的代码块。
 - 可以在 `else` 后面再跟一个 `if`，形成嵌套的 `if-else` 结构，用于处理多个条件。
 
-下面是一个示例：
-
-```cpp
-#include <iostream>
-
-int main() {
-    int num = 10;
-
-    if (num > 0) {
-        std::cout << "Number is positive" << std::endl;
-    } else if (num < 0) {
-        std::cout << "Number is negative" << std::endl;
-    } else {
-        std::cout << "Number is zero" << std::endl;
-    }
-
-    return 0;
-}
-```
-
-在这个示例中，根据 `num` 的值不同，执行不同的输出操作。如果 `num` 大于 0，则输出 "Number is positive"；如果 `num` 小于 0，则输出 "Number is negative"；如果 `num` 等于 0，则输出 "Number is zero"。
-
 
 
 ***
 
 #### 6.1.2 格式化if else 语句
 
-格式化的 `if-else` 语句指的是通过缩进和换行来增强代码的可读性和结构清晰度的写法。虽然在 C++ 中，大多数 `if-else` 语句在语法上允许在单行上编写，但将其格式化为多行的形式通常更易于阅读和维护。
-
-下面是一个示例，展示了格式化的 `if-else` 语句：
+虽然对于简单的 `if-else` 结构，单行编写也可以，但对于较长、更复杂的条件语句，格式化成多行的方式通常更为合适。
 
 ```cpp
-#include <iostream>
-
 int main() {
     int num = 10;
-
     if (num > 0) {
         std::cout << "Number is positive" << std::endl;
     } 
@@ -3228,20 +3242,15 @@ int main() {
     else {
         std::cout << "Number is zero" << std::endl;
     }
-
     return 0;
 }
 ```
 
-在这个示例中，`if`、`else if` 和 `else` 语句块都被缩进了一定的空格，以使其更易于阅读。这样的格式化使得每个条件分支都更清晰地呈现出来，有助于读者理解代码的逻辑。
+***
 
-虽然对于简单的 `if-else` 结构，单行编写也可以，但对于较长、更复杂的条件语句，格式化成多行的方式通常更为合适。
+#### 6.1.3 if else if else 结构
 
-
-
-
-
-
+if else 语句允许嵌套包含 if else 语句
 
 ***
 
@@ -3251,64 +3260,18 @@ int main() {
 
 1. **逻辑与（AND）：`&&`**
    - 逻辑与操作符用于检查两个条件是否同时为真。当且仅当两个条件都为真时，整个表达式的结果才为真；否则，结果为假。
-   - 语法：`condition1 && condition2`
-   - 示例：
-
-   ```cpp
-   int x = 5;
-   int y = 10;
-   
-   if (x > 0 && y > 0) {
-       // 如果 x 和 y 都大于 0，则执行该代码块
-   }
-   ```
-
 2. **逻辑或（OR）：`||`**
    - 逻辑或操作符用于检查两个条件中至少一个是否为真。如果两个条件中有一个为真，则整个表达式的结果为真；只有当两个条件都为假时，整个表达式的结果才为假。
-   - 语法：`condition1 || condition2`
-   - 示例：
-
-   ```cpp
-   int x = 5;
-   int y = 10;
-   
-   if (x == 0 || y == 0) {
-       // 如果 x 或者 y 中有一个等于 0，则执行该代码块
-   }
-   ```
 
 3. **逻辑非（NOT）：`!`**
    - 逻辑非操作符用于对条件的结果进行取反。如果条件为真，则取反后结果为假；如果条件为假，则取反后结果为真。
-   - 语法：`!condition`
-   - 示例：
-
-   ```cpp
-   bool flag = true;
-   
-   if (!flag) {
-       // 如果 flag 为假，则执行该代码块
-   }
-   ```
-
-逻辑表达式常用于控制程序的流程，例如在 `if` 语句、循环条件、布尔变量的赋值等地方。熟练掌握逻辑表达式的使用，可以编写出更具有逻辑严谨性和可读性的代码。
 
 
 
 
-
-
-
-
+注意：and 、or、not 都是C++保留字，不能用作变量名等等，当你的键盘上面没有用作逻辑运算符的符号的时候，可以用它们作为替代，只要在程序中包含头文件ios646.h。
 
 ***
-
-
-
-
-
-
-
-
 
 ### 6.3 字符函数库CCtype
 
@@ -3316,35 +3279,45 @@ Cctype 是 C/C++ 标准库中的一个函数库，提供了一些用于测试和
 
 以下是一些常用的 Cctype 函数及其功能：
 
-1. **`isalpha(int c)`**
-   - 检查字符是否是一个字母（a-z 或 A-Z）。
-   - 如果是字母，则返回非零值；否则返回 0。
+>  检查字符
 
+1. **`isalpha(int c)`**
+  
+   - 检查字符是否是一个==字母==（a-z 或 A-Z）。
+   - 如果是字母，则返回非零值；否则返回 0。
+   
+   相比<code> if((ch >= 'a' && ch<= 'z') || (ch >= 'A' && ch<= 'Z')) </code>和<code> if(isalpha(ch)) </code> 来说，很明显字符函数集省去了很多麻烦。
+   
 2. **`isdigit(int c)`**
-   - 检查字符是否是一个数字（0-9）。
+   - 检查字符是否是一个==数字==（0-9）。
    - 如果是数字，则返回非零值；否则返回 0。
 
 3. **`isalnum(int c)`**
-   - 检查字符是否是一个字母或数字。
+   - 检查字符是否是一个==字母或数字==。
    - 如果是字母或数字，则返回非零值；否则返回 0。
 
 4. **`isspace(int c)`**
-   - 检查字符是否是一个空白字符（空格、制表符、换行符等）。
+  
+   - 检查字符是否是一个==空白字符==（空格、制表符、换行符等）。
    - 如果是空白字符，则返回非零值；否则返回 0。
-
+   
 5. **`islower(int c)`**
-   - 检查字符是否是一个小写字母（a-z）。
+  
+   - 检查字符是否是一个==小写字母==（a-z）。
    - 如果是小写字母，则返回非零值；否则返回 0。
-
+   
 6. **`isupper(int c)`**
-   - 检查字符是否是一个大写字母（A-Z）。
+  
+   - 检查字符是否是一个==大写字母==（A-Z）。
    - 如果是大写字母，则返回非零值；否则返回 0。
 
-7. **`tolower(int c)`**
+>  大小写互换
+
+1. **`tolower(int c)`**
    - 将大写字母转换为小写字母。
    - 如果参数是大写字母，则返回对应的小写字母；否则返回参数本身。
 
-8. **`toupper(int c)`**
+2. **`toupper(int c)`**
    - 将小写字母转换为大写字母。
    - 如果参数是小写字母，则返回对应的大写字母；否则返回参数本身。
 
@@ -3377,8 +3350,6 @@ int max = (x > y) ? x : y;
 
 ***
 
-
-
 ### 6.5 switch 语句
 
 `switch` 语句是 C++ 中用于根据表达式的值选择不同执行路径的控制语句。它可以替代一系列的 `if-else if-else` 结构，使代码更加简洁和易于理解。`switch` 语句的基本语法如下：
@@ -3399,9 +3370,9 @@ switch (expression) {
 ```
 
 - `switch` 后面跟着一个表达式，该表达式的值将被用来匹配 `case` 分支。
-- 每个 `case` 后面跟着一个常量（可以是整数、字符或枚举值），表示要与表达式的值进行比较。
+- 每个 `case` 后面==跟着一个常量（可以是整数、字符或枚举值）==（<font size=2 color=red >所以不能用来处理浮点测试 </font>），表示要与表达式的值进行比较。
 - 当表达式的值等于某个 `case` 后面的常量时，将执行对应 `case` 后面的代码块，并且执行完该代码块后会自动跳出 `switch` 语句，除非遇到 `break` 关键字。
-- 如果没有任何一个 `case` 分支匹配成功，则执行 `default` 后面的代码块（可选）。
+- 如果没有任何一个 `case` 分支匹配成功，则==执行 `default` 后面的代码块==（可选）。
 - `break` 关键字用于结束 `case` 分支的执行，如果省略 `break`，则会继续执行后面的 `case` 或 `default` 分支。
 
 以下是一个示例：
@@ -3441,7 +3412,7 @@ int main() {
 
 1. **`break` 语句：**
    - `break` 语句用于在循环内部中止循环的执行，并跳出循环体。
-   - 当 `break` 语句被执行时，程序将立即退出当前的循环，执行将继续执行循环后面的代码。
+   - 当 `break` 语句被执行时，程序将==立即退出当前的循环==，==执行将继续执行循环后面的代码==。
    - `break` 通常用于循环中的某个条件满足时立即停止循环，而不是等到循环条件不再满足。
    - `break` 只能用于 `switch`、`while`、`do-while` 和 `for` 循环。
 
@@ -3456,11 +3427,12 @@ int main() {
    ```
 
 2. **`continue` 语句：**
+  
    - `continue` 语句用于跳过循环体内的剩余代码，并在下一次循环迭代时立即执行下一次循环的条件判断。
-   - 当 `continue` 语句被执行时，程序将立即跳到循环的开始处，继续下一次循环迭代。
+   - 当 `continue` 语句被执行时，程序将==立即跳到循环的开始处，继续下一次循环迭代==。
    - `continue` 可以让循环提前进入下一轮迭代，而不是执行剩余的循环体代码。
    - `continue` 只能用于 `while`、`do-while` 和 `for` 循环。
-
+   
    示例：
    ```cpp
    for (int i = 0; i < 10; ++i) {
@@ -3473,22 +3445,70 @@ int main() {
 
 这两个关键字在循环中的使用可以提高代码的灵活性和执行效率。`break` 可以提前结束循环，而 `continue` 可以在满足某些条件时跳过当前迭代，进入下一轮循环。
 
+<font color = red>还有一个goto 但是不推荐。</font>
+
 ***
 
-### 6.7 简单文件输入/输出 
+### 6.7读取数字的循环
+
+### 问题描述
+
+在一个输入数字的循环中，如果==用户输入了非数字字符，循环将结束==。需要设计一个程序来实现这一功能。
+
+### 解决方案
+
+使用 C++ 提供的输入流和输入验证机制，可以有效地处理用户输入的数字，并在遇到非数字输入时结束循环。以下是详细的步骤和代码示例。
+
+### 示例代码
+
+1. **包含头文件**：
+   - `#include <iostream>` 用于标准输入输出。
+   - `#include <limits>` 用于 `std::numeric_limits`。
+   - using namespace std;
+   
+2. **提示用户输入数字**：
+   ```cpp
+   cout << "请输入数字：" << endl;
+   ```
+
+3. **循环读取输入**：
+  
+   ```cpp
+   while (true) {
+       cout << "输入一个数字: ";
+       cin >> number;
+   ```
+   
+4. **检查非数字输入**：
+   ```cpp
+   if (cin.fail()) {
+       cin.clear(); // 清除错误标志
+       cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 丢弃输入缓冲区中的内容
+       cout << "检测到非数字输入，循环终止！" << endl;
+       break;
+   }
+   ```
+
+5. **输出用户输入的数字**：
+   ```cpp
+   cout << "You entered: " << number << endl;
+   ```
+
+***
+
+### 6.8 简单文件输入/输出 
 
 文件的输入和输出是指在程序中进行文件的读取和写入操作。C++ 提供了一组用于文件操作的标准库，其中主要包括 `<fstream>` 头文件中定义的类和函数。
 
 1. **文件的输出（写入）：**
   
-   - 若要将数据写入文件，首先需要创建一个输出文件流对象，通常使用 `ofstream` 类。
-   - 打开文件并将数据写入文件后，需要关闭文件以释放资源。
+   - 若要将数据写入文件，首先需要<u>创建一个输出文件流对象，通常使用 `ofstream` 类</u>。
+   - 打开文件并将数据写入文件后，需要<u>关闭文件以释放资源</u>。
    
    示例：
    ```cpp
    #include <iostream>
    #include <fstream>
-   
    int main() {
        std::ofstream outFile("output.txt"); // 创建输出文件流对象，并打开名为 "output.txt" 的文件
        if (outFile.is_open()) { // 检查文件是否成功打开
@@ -3529,27 +3549,941 @@ int main() {
 
 在进行文件操作时，要确保文件的打开和关闭操作，以防止资源泄露或数据丢失。此外，建议对文件的打开操作进行检查，以处理可能的文件打开失败情况。
 
+***
 
+***
 
+## 第七章： 函数-----------C++的编程模块
 
+### 7.1 复习函数的基本知识
 
+#### 7.7.1 函数定义
 
+函数定义包括函数名、参数列表、返回类型和函数体。它描述了函数的具体实现。
 
+> **语法：**
 
+```cpp
+返回类型 函数名(参数列表) {
+    // 函数体
+    // 函数的实现代码
+    return 返回值; // 可选，视返回类型而定
+}
+```
 
+> **示例：**
 
+```cpp
+int add(int a, int b) {
+    return a + b;                     //在这个示例中，`add` 函数接收两个 `int` 类型的参数，并返回它们的和。
+}
+```
 
+#### 7.1.2 函数原型
 
+函数原型，也称为函数声明，是在函数调用之前告诉编译器函数的名称、返回类型和参数类型。<u>函数原型通常放在程序的开头部分或头文件中</u>。
 
+**语法：**
 
+```cpp
+返回类型 函数名(参数列表);
+```
 
+**示例：**
 
+```cpp
+int add(int a, int b);
+```
 
+函数原型的作用是向编译器声明函数的存在，以便在调用函数时编译器能够正确解析函数调用。函数原型不包含函数的具体实现。作用是方便编译器去查找函数文件，其次是方便处理权限问题。
 
+#### 7.1.3 函数调用
 
+函数调用是指在程序的某个位置使用函数名和适当的参数来执行函数定义中的代码。当函数被调用时，程序控制权转移到函数定义处，函数执行完毕后控制权返回到调用函数的位置。
 
+**语法：**
 
+```cpp
+函数名(实参列表);
+```
 
+**示例：**
+```cpp
+int result = add(5, 3); // 调用 add 函数，传递 5 和 3 作为参数
+```
+
+在这个示例中，`add(5, 3)` 调用 `add` 函数，并将 5 和 3 作为参数传递给函数。函数执行后，返回值存储在变量 `result` 中。
+
+***
+
+### 7.2 函数参数和按值传递
+
+在 C++ 中，函数参数是用于传递值给函数的变量。函数参数可以有多种传递方式，其中最常见的是按值传递。
+
+#### 函数参数
+
+函数参数定义在函数的参数列表中，用于接收调用函数时传递的值。参数可以是任意有效的 C++ 类型，包括基本数据类型、对象、指针、引用等。
+
+**语法：**
+```cpp
+返回类型 函数名(参数类型 参数名, ...);
+```
+
+**示例：**
+```cpp
+int add(int a, int b);
+```
+在这个示例中，`add` 函数接收两个 `int` 类型的参数 `a` 和 `b`。
+
+#### 按值传递
+
+按值传递是 C++ 中最常见的参数传递方式。在按值传递中，函数接收的是实参的一个副本，而不是实参本身。函数内部对参数的修改不会影响实参。
+
+**特点：**
+
+1. **安全性**：因为函数接收的是参数的==副本==，函数内部的修改不会影响实际参数。
+2. **效率**：对于基本数据类型和小对象，按值传递是高效的。但是对于大对象或复杂数据结构，按值传递可能会有较高的性能开销。
+
+**语法：**
+```cpp
+返回类型 函数名(参数类型 参数名) {
+    // 函数体
+}
+```
+
+***
+
+### 7.3 函数和数组
+
+#### 7.3.1 函数如何使用指针来处理数组
+
+在 C++ 中，函数可以接收一维数组作为参数，并且可以通过指针操作数组元素。处理一维数组参数时，需要注意数组的特殊属性和传递方式。
+
+#### 1. 数组作为函数参数
+
+当一维数组被传递给函数时，实际上传递的是数组的指针。因此，函数**接收的是数组的地址，而不是数组的副本。这意味着在函数内部修改数组元素会影响到实际的数组**。
+
+**语法：**
+
+```cpp
+void functionName(数据类型 数组名[], int size);
+```
+
+或者：
+```cpp
+void functionName(数据类型* 数组名, int size);
+```
+
+**示例：**
+```cpp
+#include <iostream>
+
+// 函数声明，接受数组参数
+void printArray(int arr[], int size);
+
+int main() {
+    int myArray[5] = {1, 2, 3, 4, 5};
+    printArray(myArray, 5); // 传递数组和数组大小
+    return 0;
+}
+
+// 函数定义
+void printArray(int arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+}
+```
+
+在这个示例中，`printArray` 函数接收一个整数数组和数组的大小，并输出数组的元素。
+
+#### 2. 修改数组元素
+
+因为数组是按引用传递的（实际上是传递指针），函数内部可以修改数组的元素，这些修改会影响到实际的数组。
+
+**示例：**
+
+```cpp
+#include <iostream>
+
+// 函数声明，接受数组参数
+void modifyArray(int arr[], int size);
+
+int main() {
+    int myArray[5] = {1, 2, 3, 4, 5};
+    modifyArray(myArray, 5); // 传递数组和数组大小
+    for (int i = 0; i < 5; i++) {
+        std::cout << myArray[i] << " ";
+    }
+    std::cout << std::endl;
+    return 0;
+}
+
+// 函数定义
+void modifyArray(int arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        arr[i] = arr[i] * 2;
+    }
+}
+```
+
+在这个示例中，`modifyArray` 函数将数组的每个元素乘以 2，修改实际的数组。
+
+#### 3. 使用指针传递数组
+
+数组作为参数可以显式地使用指针进行传递。这种方式与按数组传递是等价的，因为数组名本身就是指向第一个元素的指针。
+
+**语法：**
+```cpp
+void functionName(数据类型* 指针名, int size);
+```
+
+**示例：**
+```cpp
+#include <iostream>
+l
+// 函数声明，使用指针传递数组
+void printArray(int* arr, int size);
+
+int main() {
+    int myArray[5] = {1, 2, 3, 4, 5};
+    printArray(myArray, 5); // 传递数组和数组大小
+    return 0;
+}
+
+// 函数定义
+void printArray(int* arr, int size) {
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+}
+```
+
+在这个示例中，`printArray` 函数接收一个指向整数的指针和数组的大小，并输出数组的元素。
+
+***
+
+### 7.4 函数和二维数组
+
+### 函数和二维数组
+
+在 C++ 中，函数可以接收二维数组作为参数，并对其进行操作。处理二维数组参数时，需要注意指定数组的维度信息。
+
+#### 1. 二维数组作为函数参数
+
+与一维数组类似，当二维数组被传递给函数时，传递的是数组的指针。然而，对于二维数组，除了第一维之外的所有维度的大小必须在函数声明中显式指定。
+
+**语法：**
+```cpp
+void functionName(数据类型 数组名[][列大小], int 行大小);
+```
+
+**示例：**
+```cpp
+#include <iostream>
+
+// 函数声明，接受二维数组参数
+void print2DArray(int arr[][3], int rows);
+
+int main() {
+    int my2DArray[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    print2DArray(my2DArray, 2); // 传递二维数组和行数
+    return 0;
+}
+
+// 函数定义
+void print2DArray(int arr[][3], int rows) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < 3; j++) {
+            std::cout << arr[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+```
+
+在这个示例中，`print2DArray` 函数接收一个二维数组和行数，并输出数组的元素。函数声明中必须指定二维数组的列大小。
+
+#### 2. 修改二维数组元素
+
+因为二维数组是按引用传递的（实际上是传递指针），函数内部可以修改二维数组的元素，这些修改会影响到实际的数组。
+
+**示例：**
+```cpp
+#include <iostream>
+
+// 函数声明，接受二维数组参数
+void modify2DArray(int arr[][3], int rows);
+
+int main() {
+    int my2DArray[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    modify2DArray(my2DArray, 2); // 传递二维数组和行数
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 3; j++) {
+            std::cout << my2DArray[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    return 0;
+}
+
+// 函数定义
+void modify2DArray(int arr[][3], int rows) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < 3; j++) {
+            arr[i][j] = arr[i][j] * 2;
+        }
+    }
+}
+```
+
+在这个示例中，`modify2DArray` 函数将二维数组的每个元素乘以 2，修改实际的数组。
+
+#### 3. 使用指针数组传递二维数组
+
+二维数组作为参数也可以通过指向数组的指针进行传递。这需要对指针进行适当的处理。
+
+**语法：**
+```cpp
+void functionName(数据类型 (*指针名)[列大小], int 行大小);
+```
+
+**示例：**
+```cpp
+#include <iostream>
+
+// 函数声明，使用指针数组传递二维数组
+void print2DArray(int (*arr)[3], int rows);
+
+int main() {
+    int my2DArray[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    print2DArray(my2DArray, 2); // 传递二维数组和行数
+    return 0;
+}
+
+// 函数定义
+void print2DArray(int (*arr)[3], int rows) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < 3; j++) {
+            std::cout << arr[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+```
+
+在这个示例中，`print2DArray` 函数接收一个指向二维数组的指针和行数，并输出数组的元素。
+
+### 总结
+
+- **二维数组作为函数参数**：函数需要显式指定二维数组的列大小。
+- **修改二维数组元素**：可以在函数内部修改二维数组的元素，修改会影响到实际的数组。
+- **使用指针数组传递二维数组**：二维数组也可以通过指向数组的指针进行传递。
+
+理解函数和二维数组的结合使用，可以提高多维数组操作的灵活性和代码的可维护性。
+
+***
+
+### 7.5 函数和C风格字符串
+
+### 函数和C风格字符串
+
+在 C++ 中，C风格字符串（也称为字符数组）通常作为函数参数传递。C风格字符串以空字符 `\0` 结尾，可以通过指针进行操作和传递。
+
+#### 1. C风格字符串作为函数参数
+
+C风格字符串实际上传递的是指向第一个字符的指针。因此，函数接收的是字符串的地址，而不是字符串的副本。函数可以通过指针访问和修改字符串的内容。
+
+**语法：**
+```cpp
+void functionName(const char* str);
+```
+
+**示例：**
+```cpp
+#include <iostream>
+
+// 函数声明，接受C风格字符串作为参数
+void printString(const char* str);
+
+int main() {
+    const char* myString = "Hello, C-style string!";
+    printString(myString); // 传递C风格字符串
+    return 0;
+}
+
+// 函数定义
+void printString(const char* str) {
+    while (*str != '\0') {
+        std::cout << *str;
+        str++;
+    }
+    std::cout << std::endl;
+}
+```
+
+在这个示例中，`printString` 函数接收一个指向 `const char` 的指针，并打印字符串的每个字符，直到遇到空字符 `\0`。
+
+#### 2. 修改C风格字符串
+
+虽然C风格字符串是常量指针（指向常量的指针），但可以通过指针修改字符串的内容。但需要注意，传递的字符串必须是可修改的，或者使用 `const_cast` 去除常量性。
+
+**示例：**
+```cpp
+#include <iostream>
+
+// 函数声明，接受并修改C风格字符串
+void modifyString(char* str);
+
+int main() {
+    char myString[] = "Hello";
+    modifyString(myString); // 传递并修改C风格字符串
+    std::cout << "Modified string: " << myString << std::endl;
+    return 0;
+}
+
+// 函数定义
+void modifyString(char* str) {
+    while (*str != '\0') {
+        *str = toupper(*str); // 将字符转换为大写
+        str++;
+    }
+}
+```
+
+在这个示例中，`modifyString` 函数接收一个指向 `char` 的指针，并将字符串中的每个字符转换为大写。
+
+#### 3. 使用 `const` 修饰符
+
+如果不打算修改字符串内容，建议使用 `const` 修饰符声明函数参数，以防止意外的修改。
+
+**示例：**
+```cpp
+#include <iostream>
+
+// 函数声明，接受只读C风格字符串
+void printString(const char* str);
+
+int main() {
+    const char* myString = "Hello, C-style string!";
+    printString(myString); // 传递只读C风格字符串
+    return 0;
+}
+
+// 函数定义
+void printString(const char* str) {
+    while (*str != '\0') {
+        std::cout << *str;
+        str++;
+    }
+    std::cout << std::endl;
+}
+```
+
+在这个示例中，`printString` 函数接收一个指向 `const char` 的指针，并打印字符串的每个字符，但不会修改字符串内容。
+
+### 总结
+
+- **C风格字符串作为函数参数**：实际传递的是指向第一个字符的指针。
+- **修改C风格字符串**：可以通过指针修改字符串内容，但需要小心处理指向常量的指针。
+- **使用 `const` 修饰符**：建议对不需要修改的字符串使用 `const char*` 声明函数参数。
+
+理解函数和C风格字符串的结合使用，可以有效处理字符串操作，提高代码的灵活性和可维护性。
+
+***
+
+### 7.6 函数和结构
+
+### 函数和结构体
+
+在 C++ 中，结构体（struct）是一种用户定义的数据类型，用于组合不同类型的数据成员。结构体可以作为函数的参数和返回类型，使得函数能够处理复杂的数据结构。
+
+#### 1. 结构体作为函数参数
+
+结构体可以作为函数的参数传递，可以按值传递（拷贝结构体）、按引用传递（传递结构体的地址）或者指向结构体的指针传递。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <string>
+
+// 定义结构体
+struct Person {
+    std::string name;
+    int age;
+};
+
+// 函数声明，接受结构体作为参数
+void printPerson(const Person& p);
+
+int main() {
+    // 创建结构体对象
+    Person person1 = {"Alice", 30};
+    // 调用函数，传递结构体对象
+    printPerson(person1);
+    return 0;
+}
+
+// 函数定义，打印结构体成员
+void printPerson(const Person& p) {
+    std::cout << "Name: " << p.name << ", Age: " << p.age << std::endl;
+}
+```
+
+在这个示例中，`Person` 结构体包含 `name` 和 `age` 两个成员变量。`printPerson` 函数接收一个 `Person` 结构体的常引用，并打印出结构体的成员。
+
+#### 2. 结构体作为函数返回类型
+
+函数可以返回结构体，同样可以按值返回、按引用返回或者返回指向结构体的指针。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <string>
+
+// 定义结构体
+struct Person {
+    std::string name;
+    int age;
+};
+
+// 函数声明，返回结构体对象
+Person createPerson(const std::string& name, int age);
+
+int main() {
+    // 调用函数，返回结构体对象
+    Person person2 = createPerson("Bob", 25);
+    // 打印返回的结构体对象
+    std::cout << "Created person: Name: " << person2.name << ", Age: " << person2.age << std::endl;
+    return 0;
+}
+
+// 函数定义，创建并返回结构体对象
+Person createPerson(const std::string& name, int age) {
+    Person p;
+    p.name = name;
+    p.age = age;
+    return p;
+}
+```
+
+在这个示例中，`createPerson` 函数创建一个 `Person` 结构体对象并返回。在 `main` 函数中调用 `createPerson` 并输出返回的结构体对象的成员。
+
+#### 3. 结构体和函数的灵活应用
+
+结构体的使用使得函数可以处理更复杂的数据结构，例如管理学生信息、员工信息等。通过结构体，可以将相关的数据打包在一起，方便传递和处理。
+
+```cpp
+#include <iostream>
+#include <string>
+
+// 定义结构体
+struct Student {
+    std::string name;
+    int age;
+    float gpa;
+};
+
+// 函数声明，接受结构体作为参数
+void printStudent(const Student& student);
+
+int main() {
+    // 创建结构体对象
+    Student s1 = {"John Doe", 20, 3.8};
+    // 调用函数，传递结构体对象
+    printStudent(s1);
+    return 0;
+}
+
+// 函数定义，打印学生信息
+void printStudent(const Student& student) {
+    std::cout << "Name: " << student.name << ", Age: " << student.age << ", GPA: " << student.gpa << std::endl;
+}
+```
+
+在这个示例中，`Student` 结构体包含 `name`、`age` 和 `gpa` 三个成员变量，`printStudent` 函数接收一个 `Student` 结构体的常引用，并打印出学生的信息。
+
+### 总结
+
+- **结构体作为函数参数**：可以按值传递、按引用传递或者传递指向结构体的指针。
+- **结构体作为函数返回类型**：可以按值返回、按引用返回或者返回指向结构体的指针。
+- **灵活应用**：结构体使得函数能够处理复杂的数据结构，便于管理和操作相关的数据集合。
+
+通过结构体，可以更加灵活和高效地组织和操作数据，提高代码的可读性和维护性。
+
+***
+
+### 7.7 函数和String对象
+
+在 C++ 中，字符串可以使用标准库中的 `std::string` 类来表示和操作，而不是传统的 C 风格字符串。`std::string` 类提供了许多便捷的方法来处理字符串，包括复制、连接、比较和搜索等操作。下面将介绍如何在函数中使用 `std::string` 对象。
+
+### 函数和 `std::string` 对象
+
+#### 1. `std::string` 作为函数参数
+
+`std::string` 对象可以作为函数的参数传递，可以按值传递（拷贝字符串）、按引用传递（传递字符串的地址）或者传递指向 `std::string` 对象的指针。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <string>
+
+// 函数声明，接受 std::string 对象作为参数
+void printString(const std::string& str);
+
+int main() {
+    std::string myString = "Hello, std::string!";
+    printString(myString); // 传递 std::string 对象
+    return 0;
+}
+
+// 函数定义，打印 std::string 对象
+void printString(const std::string& str) {
+    std::cout << "String passed to function: " << str << std::endl;
+}
+```
+
+在这个示例中，`printString` 函数接收一个 `const std::string&` 类型的引用，并打印出传递给函数的字符串对象。
+
+#### 2. `std::string` 作为函数返回类型
+
+函数也可以返回 `std::string` 对象，可以按值返回（复制字符串）、按引用返回或者返回指向 `std::string` 对象的指针。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <string>
+
+// 函数声明，返回 std::string 对象
+std::string concatenateStrings(const std::string& str1, const std::string& str2);
+
+int main() {
+    std::string s1 = "Hello";
+    std::string s2 = "World";
+    std::string result = concatenateStrings(s1, s2);
+    std::cout << "Concatenated string: " << result << std::endl;
+    return 0;
+}
+
+// 函数定义，连接两个 std::string 对象
+std::string concatenateStrings(const std::string& str1, const std::string& str2) {
+    return str1 + " " + str2;
+}
+```
+
+在这个示例中，`concatenateStrings` 函数接收两个 `const std::string&` 类型的引用，并返回连接后的 `std::string` 对象。
+
+#### 3. 使用 `std::string` 的方法
+
+`std::string` 类提供了丰富的方法来操作字符串，例如 `length()`、`substr()`、`find()` 等，可以在函数中方便地使用这些方法来处理字符串数据。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <string>
+
+// 函数声明，使用 std::string 的方法
+void processString(const std::string& str);
+
+int main() {
+    std::string myString = "Hello, C++!";
+    processString(myString); // 处理 std::string 对象
+    return 0;
+}
+
+// 函数定义，使用 std::string 的方法
+void processString(const std::string& str) {
+    std::cout << "Length of string: " << str.length() << std::endl;
+    std::cout << "Substring from index 7: " << str.substr(7) << std::endl;
+    std::cout << "Index of 'C++': " << str.find("C++") << std::endl;
+}
+```
+
+在这个示例中，`processString` 函数接收一个 `const std::string&` 类型的引用，并使用 `length()`、`substr()` 和 `find()` 方法来处理字符串对象。
+
+### 总结
+
+- **`std::string` 作为函数参数**：可以按值传递、按引用传递或者传递指向 `std::string` 对象的指针。
+- **`std::string` 作为函数返回类型**：可以按值返回、按引用返回或者返回指向 `std::string` 对象的指针。
+- **使用 `std::string` 的方法**：可以在函数中方便地使用 `std::string` 提供的方法来操作字符串数据，例如长度、子串提取和查找等。
+
+使用 `std::string` 类能够简化字符串操作，并提高代码的可读性和维护性，推荐在 C++ 中尽可能使用 `std::string` 代替传统的 C 风格字符串。
+
+***
+
+### 7.8 函数与array对象
+
+在 C++ 中，可以使用标准库中的 `std::array` 类模板来表示和操作数组。`std::array` 提供了许多便捷的方法来处理数组，包括访问元素、迭代、复制和比较等操作。下面将介绍如何在函数中使用 `std::array` 对象。
+
+### 函数与 `std::array` 对象
+
+#### 1. `std::array` 作为函数参数
+
+`std::array` 对象可以作为函数的参数传递，可以按值传递（拷贝数组）、按引用传递（传递数组的地址）或者传递指向 `std::array` 对象的指针。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <array>
+
+// 函数声明，接受 std::array 对象作为参数
+void printArray(const std::array<int, 5>& arr);
+
+int main() {
+    std::array<int, 5> myArray = {1, 2, 3, 4, 5};
+    printArray(myArray); // 传递 std::array 对象
+    return 0;
+}
+
+// 函数定义，打印 std::array 对象
+void printArray(const std::array<int, 5>& arr) {
+    for (int elem : arr) {
+        std::cout << elem << " ";
+    }
+    std::cout << std::endl;
+}
+```
+
+在这个示例中，`printArray` 函数接收一个 `const std::array<int, 5>&` 类型的引用，并打印出传递给函数的数组对象。
+
+#### 2. `std::array` 作为函数返回类型
+
+函数也可以返回 `std::array` 对象，可以按值返回（复制数组）、按引用返回或者返回指向 `std::array` 对象的指针。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <array>
+
+// 函数声明，返回 std::array 对象
+std::array<int, 5> createArray();
+
+int main() {
+    std::array<int, 5> result = createArray();
+    std::cout << "Created array:";
+    for (int elem : result) {
+        std::cout << " " << elem;
+    }
+    std::cout << std::endl;
+    return 0;
+}
+
+// 函数定义，创建并返回 std::array 对象
+std::array<int, 5> createArray() {
+    return {1, 2, 3, 4, 5};
+}
+```
+
+在这个示例中，`createArray` 函数创建一个 `std::array<int, 5>` 对象并返回。在 `main` 函数中调用 `createArray` 并输出返回的数组对象的元素。
+
+#### 3. 使用 `std::array` 的方法
+
+`std::array` 类提供了许多方法来操作数组，例如 `size()`、`at()`、`front()`、`back()` 等，可以在函数中方便地使用这些方法来处理数组数据。
+
+**示例：**
+```cpp
+#include <iostream>
+#include <array>
+
+// 函数声明，使用 std::array 的方法
+void processArray(const std::array<int, 5>& arr);
+
+int main() {
+    std::array<int, 5> myArray = {10, 20, 30, 40, 50};
+    processArray(myArray); // 处理 std::array 对象
+    return 0;
+}
+
+// 函数定义，使用 std::array 的方法
+void processArray(const std::array<int, 5>& arr) {
+    std::cout << "Size of array: " << arr.size() << std::endl;
+    std::cout << "First element: " << arr.front() << std::endl;
+    std::cout << "Last element: " << arr.back() << std::endl;
+    std::cout << "Element at index 2: " << arr.at(2) << std::endl;
+}
+```
+
+在这个示例中，`processArray` 函数接收一个 `const std::array<int, 5>&` 类型的引用，并使用 `size()`、`front()`、`back()` 和 `at()` 方法来处理数组对象。
+
+### 总结
+
+- **`std::array` 作为函数参数**：可以按值传递、按引用传递或者传递指向 `std::array` 对象的指针。
+- **`std::array` 作为函数返回类型**：可以按值返回、按引用返回或者返回指向 `std::array` 对象的指针。
+- **使用 `std::array` 的方法**：可以在函数中方便地使用 `std::array` 提供的方法来操作数组数据，例如访问元素、获取大小、前后端元素访问等。
+
+使用 `std::array` 类能够简化数组操作，并提高代码的可读性和维护性。
+
+***
+
+### 7.9 递归
+
+递归（Recursion）是指在函数的定义中使用函数自身的方法。在 C++ 中，递归是一种强大的编程技术，特别适合解决可以分解为相似子问题的问题，例如树结构的遍历、数学上的问题（如阶乘、斐波那契数列）等。
+
+### 递归的基本原理
+
+递归函数通常具有以下两个特点：
+
+1. **基础情况（Base Case）**：递归函数中必须有一个或多个结束递归的条件，称为基础情况。当函数达到基础情况时，递归调用停止，开始返回结果。
+  
+2. **递归情况（Recursive Case）**：递归函数中使用函数自身来解决更小或相似的子问题。在每次递归调用中，问题规模都会减少，直到达到基础情况。
+
+### 示例：计算阶乘
+
+阶乘（factorial）是一个常见的递归示例，定义如下：
+
+\[ n! = n \times (n-1) \times (n-2) \times \ldots \times 1 \]
+
+其中，\[ 0! = 1 \]。
+
+下面是使用递归计算阶乘的示例：
+
+```cpp
+#include <iostream>
+
+// 递归函数计算阶乘
+unsigned long long factorial(int n) {
+    // 基础情况：当 n 为 0 或 1 时，阶乘为 1
+    if (n == 0 || n == 1) {
+        return 1;
+    } else {
+        // 递归情况：n! = n * (n-1)!
+        return n * factorial(n - 1);
+    }
+}
+
+int main() {
+    int n;
+    std::cout << "Enter a non-negative integer: ";
+    std::cin >> n;
+    std::cout << "Factorial of " << n << " is " << factorial(n) << std::endl;
+    return 0;
+}
+```
+
+在这个示例中，`factorial` 函数使用递归方式计算输入整数 `n` 的阶乘。当 `n` 达到基础情况（即 `n` 为 0 或 1）时，递归停止并返回 1；否则，计算 `n` 乘以 `(n-1)` 的阶乘。
+
+### 递归的优缺点
+
+#### 优点：
+
+- **简洁性和清晰性**：递归能够以简洁和清晰的方式表达某些问题，特别是那些自然递归结构的问题。
+- **问题分解**：递归能够将复杂的问题分解成更小的子问题，有助于理解和解决问题。
+
+#### 缺点：
+
+- **性能开销**：递归调用可能会导致函数调用栈的深度增加，消耗额外的内存和处理时间。
+- **理解和调试复杂性**：过度使用递归可能会使代码变得难以理解和调试，特别是递归过深或逻辑复杂的情况。
+
+### 总结
+
+递归是一种强大的编程技术，可以解决许多问题，但在使用时需要谨慎。了解递归的基本原理和适用场景，以及如何设计和调试递归函数，对于掌握这一技术至关重要。
+
+***
+
+### 7.10 函数指针
+
+在 C++ 中，函数指针是指向函数的指针变量。函数指针可以让我们在运行时动态地选择调用哪个函数，这在某些情况下非常有用，特别是在需要根据条件或者用户输入来决定调用哪个函数时。
+
+### 函数指针的基本语法
+
+函数指针的声明和使用可以分为以下几个步骤：
+
+1. **声明函数指针类型**：需要声明函数指针类型，以便指向特定类型的函数。函数指针类型的声明基本上与函数原型类似，只是将函数名替换为指针变量名，并用 `(*ptr)` 来表示指针。
+
+   ```cpp
+   // 假设有一个函数原型为 int foo(int, double);
+   typedef int (*FuncPtr)(int, double); // 定义一个函数指针类型 FuncPtr
+   ```
+
+   或者直接使用 `using` 关键字定义：
+
+   ```cpp
+   using FuncPtr = int (*)(int, double);
+   ```
+
+2. **声明函数指针变量**：使用定义好的函数指针类型声明指针变量，并将其指向具体的函数。
+
+   ```cpp
+   int myFunction(int a, double b) {
+       return a + static_cast<int>(b);
+   }
+   
+   int main() {
+       FuncPtr ptr = &myFunction; // 将函数指针指向 myFunction
+       int result = ptr(3, 4.5); // 通过指针调用函数
+       std::cout << "Result: " << result << std::endl;
+       return 0;
+   }
+   ```
+
+### 函数指针的应用场景
+
+- **回调函数**：函数指针可以用于实现回调机制，即在某个事件发生时，调用预定义的函数。
+- **动态函数调用**：根据条件或者用户输入的不同，动态地调用不同的函数。
+- **函数数组**：可以使用函数指针数组来实现函数的动态调度和执行。
+
+### 示例：函数指针的回调函数
+
+```cpp
+#include <iostream>
+
+// 定义函数指针类型
+typedef void (*Callback)(int);
+
+// 函数1：打印正整数
+void printPositive(int num) {
+    if (num > 0) {
+        std::cout << "Positive number: " << num << std::endl;
+    }
+}
+
+// 函数2：打印负整数
+void printNegative(int num) {
+    if (num < 0) {
+        std::cout << "Negative number: " << num << std::endl;
+    }
+}
+
+// 函数3：打印零
+void printZero(int num) {
+    if (num == 0) {
+        std::cout << "Zero" << std::endl;
+    }
+}
+
+// 函数接受函数指针作为参数
+void processNumbers(int nums[], int size, Callback callback) {
+    for (int i = 0; i < size; ++i) {
+        callback(nums[i]); // 调用回调函数
+    }
+}
+
+int main() {
+    int numbers[] = {-2, 0, 3, -5, 1};
+    int size = sizeof(numbers) / sizeof(numbers[0]);
+
+    // 使用不同的回调函数打印不同类型的数字
+    processNumbers(numbers, size, &printPositive);
+    processNumbers(numbers, size, &printNegative);
+    processNumbers(numbers, size, &printZero);
+
+    return 0;
+}
+```
+
+在这个示例中，`processNumbers` 函数接受一个 `Callback` 类型的函数指针作为参数，根据传入的不同回调函数，打印不同类型的数字（正数、负数、零）。
+
+### 总结
+
+函数指针是 C++ 中一个强大而灵活的特性，可以用于实现动态调用函数的机制。理解和掌握函数指针可以帮助更好地理解现有的代码库，或者在需要动态选择函数调用时提供一种有效的解决方案。
+
+***
+
+***
+
+## 第八章：函数探幽
 
 
 
@@ -4053,3 +4987,4 @@ int main() {
 }
 ```
 
+ 
